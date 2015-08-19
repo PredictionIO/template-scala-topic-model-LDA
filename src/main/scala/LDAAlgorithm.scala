@@ -19,6 +19,7 @@ case class LDAModelWithCorpusAndVocab(
                                )
 
 case class AlgorithmParams(
+  numTopics: Int,
   maxIter: Int,
   docConcentration: Double,
   topicConcentration: Double
@@ -40,23 +41,22 @@ class LDAAlgorithm(val ap: AlgorithmParams)
 
     val dataStrings = data.points.map(s => s.text)
     val (corpus, vocab) = makeDocuments(dataStrings)
-    val ldaModel = new LDA().setK(3).setMaxIterations(ap.maxIter).run(corpus).asInstanceOf[DistributedLDAModel]
+    val ldaModel = new LDA().setSeed(13457).setK(ap.numTopics).setMaxIterations(ap.maxIter).run(corpus)
+      .asInstanceOf[DistributedLDAModel]
 
     LDAModelWithCorpusAndVocab(ldaModel, dataStrings zip corpus, vocab)
   }
 
   //For now we can only return topic distributions for documents that appeared in the training set
   def predict(ldaModelAndCorpus: LDAModelWithCorpusAndVocab, query: Query): PredictedResult = {
-    val topics = ldaModelAndCorpus.ldaModel.describeTopics(5)
+    val topics = ldaModelAndCorpus.ldaModel.describeTopics(10)
     val topicDists = ldaModelAndCorpus.ldaModel.topicDistributions
     val corpusMap =ldaModelAndCorpus.corpus.collect().toMap
-
- //   for ((thisStr, (index, vec)) <-  corpusMap) {logger.error(thisStr)}
 
     val maxTopicIndex: Int = getMaxTopicIndex(query, topicDists, corpusMap)
     val swappedMap = ldaModelAndCorpus.vocab.map(_.swap)
     val topicResults = for( ((indices, weights), outerIndex) <- topics zipWithIndex)
-                       yield {outerIndex -> (indices map (x => swappedMap(x)) zip weights).toMap}
+                       yield {outerIndex -> (indices map (x => swappedMap(x)) zip weights).sortWith((e1, e2) => (e1._2 > e2._2))}
 
     val topTopic = topicResults.toMap.getOrElse(maxTopicIndex, throw new scala.Exception("Cannot find topic"))
 

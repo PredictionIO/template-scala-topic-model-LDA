@@ -11,7 +11,8 @@
     {
       "name": "LDA",
       "params": {
-        "maxIter": 100,
+        "numTopics" : 5,
+        "maxIter": 200,
         "docConcentration": -1.0,
         "topicConcentration": -1.0
       }

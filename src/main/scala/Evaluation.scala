@@ -6,15 +6,15 @@ import io.prediction.controller.EngineParams
 import io.prediction.controller.EngineParamsGenerator
 import io.prediction.controller.Evaluation
 
-case class Accuracy
+case class LDAMetric
   extends AverageMetric[EmptyEvaluationInfo, Query, PredictedResult, ActualResult] {
   def calculate(query: Query, predicted: PredictedResult, actual: ActualResult)
-  : Double = (if (!predicted.topTopic.isEmpty) 1.0 else 0.0)
+  : Double = ???
 }
 
 object AccuracyEvaluation extends Evaluation {
   // Define Engine and Metric used in Evaluation
-  engineMetric = (ClassificationEngine(), new Accuracy())
+  engineMetric = (ClassificationEngine(), new LDAMetric())
 }
 
 object EngineParamsList extends EngineParamsGenerator {
@@ -30,7 +30,7 @@ object EngineParamsList extends EngineParamsGenerator {
   // algorithm parameters. In this case, we evaluate 3 engine params, each with
   // a different algorithm params value.
   engineParamsList = Seq(
-    baseEP.copy(algorithmParamsList = Seq(("LDA", AlgorithmParams(10, 0.1, 1.0)))),
-    baseEP.copy(algorithmParamsList = Seq(("LDA", AlgorithmParams(100, 0.01, 1.0)))),
-    baseEP.copy(algorithmParamsList = Seq(("LDA", AlgorithmParams(1, 0.1, 1.0)))))
+    baseEP.copy(algorithmParamsList = Seq(("LDA", AlgorithmParams(5, 10, 0.1, 1.0)))),
+    baseEP.copy(algorithmParamsList = Seq(("LDA", AlgorithmParams(5, 100, 0.01, 1.0)))),
+    baseEP.copy(algorithmParamsList = Seq(("LDA", AlgorithmParams(5, 1, 0.1, 1.0)))))
 }

@@ -9,8 +9,8 @@ class Query(
 ) extends Serializable
 
 class PredictedResult(
-  val topTopic: (Map[String,Double]),
-                     val topics: Array[(Int, Map[String,Double])]
+  val topTopic: (Array[(String,Double)]),
+                     val topics: Array[(Int, Array[(String,Double)])]
 
 ) extends Serializable
 
