@@ -14,7 +14,7 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 
 libraryDependencies ++= {
    Seq(
-  "io.prediction"    %% "core"          % "0.9.3" % "provided",
+  "io.prediction"    %% "core"          % "0.9.4" % "provided",
   "org.apache.spark" %% "spark-core"    % "1.4.0" % "provided",
   "org.apache.spark" %% "spark-mllib"   % "1.4.0" % "provided",
      "org.xerial.snappy" % "snappy-java" % "1.1.1.7")

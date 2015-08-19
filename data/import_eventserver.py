@@ -10,18 +10,16 @@ def import_events(client, file):
   count = 0
   print "Importing data..."
   for line in f:
-    data = line.rstrip('\r\n').split(",")
-    plan = data[0] 
+    text = line.rstrip('\r\n')
+  
     #Not strictly CSV, after the first comma, no longer delimiting
-    text = ",".join(data[1:])
+ 
     client.create_event(
       event="$set",
       entity_type="user",
       entity_id=str(count), # use the count num as user ID
       properties= {
-        "text" : text,
-        "category" : plan,
-        "label" : int(plan)
+        "text" : text
       }
     )
     count += 1
