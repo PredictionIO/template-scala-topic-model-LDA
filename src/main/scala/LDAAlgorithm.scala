@@ -64,7 +64,8 @@ class LDAAlgorithm(val ap: AlgorithmParams)
   }
 
   def getMaxTopicIndex(query: Query, topicDists: RDD[(Long, Vector)], corpusMap: Map[String, (Long, Vector)]): Int = {
-    val (queryDocId, queryVec) = corpusMap.getOrElse(query.text, throw new scala.Exception("Can't find document"))
+    val (queryDocId, queryVec) = corpusMap.getOrElse(query.text.trim, throw new scala.Exception
+    ("Can't find document"))
     logger.error(query.text + " " + queryVec)
 
     val queryTopics = for ((index, vec) <- topicDists if index.equals(queryDocId)) yield vec
